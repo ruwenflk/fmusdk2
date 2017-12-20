@@ -57,7 +57,12 @@
 #endif /*__APPLE__*/
 #endif /*WINDOWS*/
 
+#if WINDOWS
 #define RESOURCES_DIR "resources\\"
+#else
+#define RESOURCES_DIR "resources/"
+#endif
+
 
 // return codes of the 7z command line tool
 #define SEVEN_ZIP_NO_ERROR 0 // success

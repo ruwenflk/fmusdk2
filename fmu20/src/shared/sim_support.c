@@ -29,6 +29,9 @@
 #endif
 
 extern FMU fmu;
+char template[13];
+int counter = 0;
+char* tmp;
 
 #if WINDOWS
 int unzip(const char *zipPath, const char *outPath) {
@@ -143,6 +146,7 @@ static char* getTmpPath() {
         printf ("error: Could not find temporary disk space\n");
         return NULL;
     }
+    printf("tmpPath : %s ##\n",tmpPath);
     strcat(tmpPath, "fmu\\");
     return strdup(tmpPath);
 }
@@ -155,14 +159,20 @@ static char* getFmuPath(const char* fmuFileName){
   return strdup(fmuFileName);
 }
 static char* getTmpPath() {
-  char template[13];  // Lenght of "fmuTmpXXXXXX" + null
-  sprintf(template, "%s", "fmuTmpXXXXXX");
-  //char *tmp = mkdtemp(strdup("fmuTmpXXXXXX"));
-  char *tmp = mkdtemp(template);
+  //char template[13];  // Lenght of "fmuTmpXXXXXX" + null
+  if (counter ==0 ){
+    sprintf(template, "%s", "fmuTmpXXXXXX");
+    //char *tmp = mkdtemp(strdup("fmuTmpXXXXXX"));
+    printf("###template: %s ###\n",template);
+
+    tmp = mkdtemp(template);
+    counter = counter + 1;
+  }
   if (tmp==NULL) {
     fprintf(stderr, "Couldn't create temporary directory\n");
     exit(1);
   }
+  printf("### tmp: %s ###\n",tmp);
   char * results = calloc(sizeof(char), strlen(tmp) + 2);
   strncat(results, tmp, strlen(tmp));
   return strcat(results, "/");
@@ -172,7 +182,8 @@ static char* getTmpPath() {
 char *getTempResourcesLocation() {
     char *tempPath = getTmpPath();
     char *resourcesLocation = (char *)calloc(sizeof(char), 9 + strlen(RESOURCES_DIR) + strlen(tempPath));
-    strcpy(resourcesLocation, "file:///");
+    printf("##### tmppath:%s ####\n",tempPath);
+   // strcpy(resourcesLocation, "file:///");
     strcat(resourcesLocation, tempPath);
     strcat(resourcesLocation, RESOURCES_DIR);
     free(tempPath);
@@ -401,6 +412,7 @@ void loadFMU(const char* fmuFileName) {
         sprintf(dllPath,"%s%s%s%s", tmpPath, DLL_DIR2, modelId, DLL_SUFFIX2);
         if (!loadDll(dllPath, &fmu)) exit(EXIT_FAILURE); 
     }
+    printf("loading fmu.. tmppath/dllpath: %s, %s\n", tmpPath,dllPath);
     free(dllPath);
     free(fmuPath);
     free(tmpPath);
@@ -431,6 +443,7 @@ static void doubleToCommaString(char* buffer, double r){
 // otherwise, the given separator (e.g. ';' or '\t') is to separate columns, and ',' is used 
 // as decimal dot in floating-point numbers.
 void outputRow(FMU *fmu, fmi2Component c, double time, FILE* file, char separator, fmi2Boolean header) {
+    printf("#########tets###############");
     int k;
     fmi2Real r;
     fmi2Integer i;
