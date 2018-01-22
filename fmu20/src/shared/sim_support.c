@@ -166,7 +166,7 @@ static char* getTmpPath() {
     printf("###template: %s ###\n",template);
 
     tmp = mkdtemp(template);
-    counter = counter + 1;
+    counter = 1;
   }
   if (tmp==NULL) {
     fprintf(stderr, "Couldn't create temporary directory\n");
