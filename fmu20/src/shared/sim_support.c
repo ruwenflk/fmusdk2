@@ -443,7 +443,6 @@ static void doubleToCommaString(char* buffer, double r){
 // otherwise, the given separator (e.g. ';' or '\t') is to separate columns, and ',' is used 
 // as decimal dot in floating-point numbers.
 void outputRow(FMU *fmu, fmi2Component c, double time, FILE* file, char separator, fmi2Boolean header) {
-    printf("#########tets###############");
     int k;
     fmi2Real r;
     fmi2Integer i;
